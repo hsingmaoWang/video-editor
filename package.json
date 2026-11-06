@@ -4,7 +4,7 @@
   "private": true,
   "description": "Zero-Token local video editor with AI subtitle generation",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd .. && cp -r frontend/dist ./dist"
+    "build": "test -d frontend && (cd frontend && npm install && npm run build && cd .. && cp -r frontend/dist ./dist) || (npm install && npm run build)"
   },
   "devDependencies": {
     "vite": "^5.4.2"
