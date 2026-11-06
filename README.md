@@ -106,3 +106,27 @@ npm run dev
 | `POST` | `/api/video/render` | FFmpeg 精準剪輯與字幕硬編碼燒錄 |
 | `GET` | `/docs` | Swagger UI 互動式 API 測試文件 |
 
+---
+
+## ☁️ 部署到 Vercel (網頁端託管)
+
+本專案支援將漂亮的 React 前端介面部署到 **Vercel** 雲端：
+
+1. **推送至 GitHub**：
+   ```bash
+   git remote add origin https://github.com/<您的GitHub帳號>/<專案名稱>.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+2. **在 Vercel 建立新專案**：
+   - 登入 [Vercel](https://vercel.com)，點擊 **Add New Project**。
+   - 選擇匯入您在 GitHub 建立的本專案。
+   - 專案已內建 `vercel.json`，Vercel 會自動辨識建置指令與產物目錄：
+     - **Build Command**: `cd frontend && npm install && npm run build`
+     - **Output Directory**: `frontend/dist`
+   - （可選）在 Vercel 專案設定中加入環境變數：
+     - `VITE_API_BASE_URL`：指定後端 API 伺服器網址（例如 `http://localhost:8000` 或雲端伺服器 IP）。
+   - 點擊 **Deploy**，幾分鐘後即可透過專屬網址隨處存取剪輯工作台！
+
+
