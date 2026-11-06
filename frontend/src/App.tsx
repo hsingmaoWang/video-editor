@@ -76,25 +76,60 @@ export const App: React.FC = () => {
 
   // 上傳新影片
   const handleUpload = async (file: File) => {
-    const res = await api.uploadVideo(file);
-    await refreshList();
-    const newVideoItem: VideoItem = {
-      filename: res.filename,
-      url: res.url,
-      size_bytes: res.info.size_bytes,
-      created_at: Date.now() / 1000,
-    };
-    handleSelectVideo(newVideoItem);
-    if (res.info.duration > 0) {
-      handleDurationChange(res.info.duration);
+    try {
+      const res = await api.uploadVideo(file);
+      await refreshList();
+      const newVideoItem: VideoItem = {
+        filename: res.filename,
+        url: res.url,
+        size_bytes: res.info.size_bytes,
+        created_at: Date.now() / 1000,
+      };
+      handleSelectVideo(newVideoItem);
+      if (res.info.duration > 0) {
+        handleDurationChange(res.info.duration);
+      }
+    } catch (err: any) {
+      console.warn('後端上傳失敗，啟用本機瀏覽器 Blob 即時預覽模式', err);
+      // 離線預覽回退方案：直接由瀏覽器建立 Blob URL 播放影片
+      const localBlobUrl = URL.createObjectURL(file);
+      const offlineItem: VideoItem = {
+        filename: file.name,
+        url: localBlobUrl,
+        size_bytes: file.size,
+        created_at: Date.now() / 1000,
+      };
+      setUploadedVideos((prev) => [offlineItem, ...prev.filter((v) => v.filename !== file.name)]);
+      handleSelectVideo(offlineItem);
+      alert(
+        `🎬 影片已載入瀏覽器預覽工作台！\n\n` +
+        `⚠️ 偵測到目前「本地算力引擎」處於離線狀態。\n` +
+        `您可以在此預覽影片與微調時間軸剪輯區間。\n\n` +
+        `💡 若需使用「AI 語音辨識字幕」與「FFmpeg 影片導出」：\n` +
+        `請在您的電腦執行：python start.py\n` +
+        `開啟本地伺服器以享受 100% 零成本本機算力！`
+      );
     }
   };
 
   // 自動轉錄字幕
   const handleGenerateSubtitles = async (lang: string) => {
     if (!activeVideo) return;
-    const res = await api.generateSubtitles(activeVideo.filename, lang);
-    setSubtitles(res.segments);
+    if (!serverHealthy) {
+      alert(
+        '⚠️ 本地算力後端處於離線狀態！\n\n' +
+        '「Faster-Whisper 語音轉文字」需在您的電腦硬體上運算（零 Token 成本）。\n\n' +
+        '請在您的電腦執行：\npython start.py\n\n' +
+        '啟動後端後即可進行本地 AI 辨識！'
+      );
+      return;
+    }
+    try {
+      const res = await api.generateSubtitles(activeVideo.filename, lang);
+      setSubtitles(res.segments);
+    } catch (err: any) {
+      alert(`語音辨識失敗：${err.message}`);
+    }
   };
 
   // 儲存字幕至本機 SRT 並自動下載（Blob URL 方式，繞過 Chrome localhost 下載封鎖）
@@ -133,6 +168,15 @@ export const App: React.FC = () => {
   // 執行剪輯與導出
   const handleRender = async (burnSubtitles: boolean) => {
     if (!activeVideo) return;
+    if (!serverHealthy) {
+      alert(
+        '⚠️ 本地算力後端處於離線狀態！\n\n' +
+        '「FFmpeg 影片無損裁切與字幕燒錄」是在本機電腦透過 FFmpeg 執行的。\n\n' +
+        '請在您的本機電腦執行：\npython start.py\n\n' +
+        '開啟 http://127.0.0.1:8000 即可進行完整導出！'
+      );
+      return;
+    }
     try {
       setIsRendering(true);
       const res = await api.renderVideo({
@@ -161,6 +205,7 @@ export const App: React.FC = () => {
         onExportClick={() => setActiveTab('export')}
         hasActiveVideo={activeVideo !== null}
         isRendering={isRendering}
+        onRefreshHealth={refreshList}
       />
 
       {/* 主體編輯工作區 (側邊欄 + 播放器畫布) */}
