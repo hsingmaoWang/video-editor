@@ -1,0 +1,9 @@
+{
+  "name": "video-editor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zero-Token local video editor with AI subtitle generation",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build"
+  }
+}

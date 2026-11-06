@@ -1,0 +1,5 @@
+# Ignore Python backend on Vercel (Faster-Whisper and FFmpeg run on user local machine)
+backend/
+start.py
+start_dev.bat
+*.pptx

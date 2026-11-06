@@ -135,8 +135,8 @@ export const SubtitleTab: React.FC<SubtitleTabProps> = ({
           onClick={handleGenerate}
           disabled={!hasActiveVideo || isGenerating}
           className={`w-full py-2 px-3 rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-all ${!hasActiveVideo || isGenerating
-              ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed'
-              : 'bg-canva-accent hover:bg-canva-accent/90 text-black font-semibold'
+            ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed'
+            : 'bg-canva-accent hover:bg-canva-accent/90 text-black font-semibold'
             }`}
         >
           {isGenerating ? (
@@ -192,8 +192,8 @@ export const SubtitleTab: React.FC<SubtitleTabProps> = ({
               <div
                 key={sub.id}
                 className={`p-2.5 rounded-lg border transition-all ${isPlayingThis
-                    ? 'border-canva-accent bg-canva-accent/10'
-                    : 'border-canva-border bg-canva-dark/50'
+                  ? 'border-canva-accent bg-canva-accent/10'
+                  : 'border-canva-border bg-canva-dark/50'
                   }`}
               >
                 <div className="flex items-center justify-between text-[11px] text-gray-400 mb-1.5">
