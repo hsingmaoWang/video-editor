@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+
+# Node & Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Heavy binaries and local AI models (>100MB, rejected by GitHub)
+backend/bin/*.exe
+!backend/bin/.gitkeep
+backend/storage/temp/models/
+backend/storage/temp/*
+!backend/storage/temp/.gitkeep
+
+# User media storage (video recordings can be hundreds of MB)
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+backend/storage/exports/*
+!backend/storage/exports/.gitkeep
+
+# Environment & IDE
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
